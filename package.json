@@ -1,0 +1,16 @@
+{
+  "name": "adready-checker",
+  "private": true,
+  "packageManager": "pnpm@10.17.1",
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "clean": "turbo run clean",
+    "web": "pnpm --filter @mono-repo/web dev",
+    "go": "cd apps/backend-go && go run cmd/server/main.go"
+  },
+  "devDependencies": {
+    "turbo": "^2.3.3"
+  }
+}

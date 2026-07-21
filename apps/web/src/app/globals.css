@@ -1,0 +1,98 @@
+@import "tailwindcss";
+
+/*
+ * AdReady design tokens (Req 15.7).
+ * Values transcribed 1:1 from the source globals.css Design Tokens table.
+ * Light values live in :root; dark overrides live in .dark (next-themes class strategy).
+ */
+:root {
+  --primary: #10b981;
+  --primary-hover: #059669;
+  --primary-soft: rgba(16, 185, 129, 0.1);
+
+  --success: #10b981;
+  --warning: #f59e0b;
+  --error: #ef4444;
+
+  --background: #f9faf8;
+  --foreground: #1a1a1a;
+  --muted: #525252;
+  --subtle: #737373;
+
+  --card: #ffffff;
+  --surface: #ffffff;
+  --surface-muted: #f5f5f2;
+
+  --border: #e5e7eb;
+  --border-hover: #d1d5db;
+
+  --focus-ring: rgba(16, 185, 129, 0.3);
+
+  --violet: #8b5cf6;
+  --amber: #fbbf24;
+}
+
+.dark {
+  --primary: #10b981;
+  --primary-hover: #059669;
+  --primary-soft: rgba(16, 185, 129, 0.15);
+
+  --success: #10b981;
+  --warning: #fbbf24;
+  --error: #f87171;
+
+  --background: #0a0a0a;
+  --foreground: #f5f5f5;
+  --muted: #a3a3a3;
+  --subtle: #737373;
+
+  --card: #1f2937;
+  --surface: #1f2937;
+  --surface-muted: #374151;
+
+  --border: #374151;
+  --border-hover: #4b5563;
+
+  --focus-ring: rgba(16, 185, 129, 0.4);
+
+  --violet: #a78bfa;
+  --amber: #fbbf24;
+}
+
+/*
+ * Map the two core surface tokens into Tailwind v4 theme utilities so
+ * `bg-background` / `text-foreground` resolve to the CSS custom properties.
+ */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  /* Prisma landing page (/prisma) tokens — additive, not used by AdReady.
+     text-primary/bg-primary → warm cream; font-serif → Instrument Serif italic. */
+  --color-primary: #dedbc8;
+  --font-serif: var(--font-instrument-serif), "Instrument Serif", serif;
+}
+
+html,
+body {
+  /* Only vertical scrolling — never a horizontal scrollbar. */
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+}
+
+/*
+ * Prisma landing page — SVG fractal-noise textures (scoped by class usage).
+ * noise-overlay: hero video grain; bg-noise: subtle Features background.
+ */
+.noise-overlay {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25'%3E%3Cfilter id='noiseFilterOverlay'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilterOverlay)'/%3E%3C/svg%3E");
+}
+
+.bg-noise {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25'%3E%3Cfilter id='noiseFilterBg'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilterBg)'/%3E%3C/svg%3E");
+}

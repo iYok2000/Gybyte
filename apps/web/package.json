@@ -1,0 +1,43 @@
+{
+  "name": "@mono-repo/web",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@mono-repo/shared-types": "workspace:*",
+    "axios": "^1.13.2",
+    "framer-motion": "^12.42.2",
+    "isomorphic-dompurify": "^2.35.0",
+    "lucide-react": "^0.473.0",
+    "next": "16.0.7",
+    "next-themes": "^0.4.2",
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
+    "react-icons": "^5.3.0"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "@tailwindcss/postcss": "^4",
+    "@testing-library/jest-dom": "6.9.1",
+    "@testing-library/react": "16.3.2",
+    "@testing-library/user-event": "14.6.1",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "@vitejs/plugin-react": "6.0.3",
+    "eslint": "^9",
+    "eslint-config-next": "16.0.7",
+    "fast-check": "4.9.0",
+    "jsdom": "29.1.1",
+    "tailwindcss": "^4",
+    "typescript": "^5",
+    "vitest": "4.1.10"
+  }
+}
