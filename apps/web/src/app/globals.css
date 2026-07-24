@@ -70,7 +70,9 @@
   /* Prisma landing page (/prisma) tokens — additive, not used by AdReady.
      text-primary/bg-primary → warm cream; font-serif → Instrument Serif italic. */
   --color-primary: #dedbc8;
-  --font-serif: var(--font-instrument-serif), "Instrument Serif", serif;
+  --font-serif:
+    var(--font-serif-thai), "Noto Serif Thai",
+    var(--font-instrument-serif), "Instrument Serif", serif;
 }
 
 html,

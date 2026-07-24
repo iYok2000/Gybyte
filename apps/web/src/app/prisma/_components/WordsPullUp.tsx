@@ -28,19 +28,16 @@ export default function WordsPullUp({
         const isLast = index === words.length - 1;
         const renderWord = () => {
           if (showAsterisk && isLast) {
-            const lastAsteriskIndex = word.lastIndexOf("a");
-            if (lastAsteriskIndex !== -1) {
-              const before = word.slice(0, lastAsteriskIndex);
-              const after = word.slice(lastAsteriskIndex + 1);
-              return (
-                <span className="relative">
-                  {before}a{after}
-                  <span className="absolute top-[0.65em] -right-[0.3em] text-[0.31em]">
-                    *
-                  </span>
+            // Append the superscript asterisk at the END of the last word,
+            // after its final character (works for any brand word).
+            return (
+              <span className="relative">
+                {word}
+                <span className="absolute top-[0.65em] -right-[0.3em] text-[0.31em]">
+                  *
                 </span>
-              );
-            }
+              </span>
+            );
           }
           return word;
         };

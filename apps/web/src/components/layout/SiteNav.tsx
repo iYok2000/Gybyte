@@ -51,6 +51,15 @@ export function SiteNav() {
     <nav className="fixed top-0 left-1/2 -translate-x-1/2 z-50">
       <div className="bg-black rounded-b-2xl md:rounded-b-3xl px-4 py-2 md:px-8">
         <div className="flex items-center gap-3 sm:gap-6 md:gap-12 lg:gap-14">
+          {/* Brand logo — links back to the homepage. */}
+          <Link href="/" aria-label="AdReady" className="shrink-0">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/logo.png"
+              alt="AdReady"
+              className="h-7 w-7 rounded-full object-cover sm:h-8 sm:w-8"
+            />
+          </Link>
           {NAV_LINKS.map((item) => (
             <NavLink key={item.label} label={item.label} href={item.href} />
           ))}

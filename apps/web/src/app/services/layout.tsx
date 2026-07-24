@@ -13,7 +13,7 @@ export default function ServicesLayout({
       className="flex min-h-screen flex-col bg-black pt-16 text-[#E1E0CC]"
       style={{
         fontFamily:
-          "var(--font-almarai), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+          "var(--font-sans), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
       }}
     >
       <SiteNav />

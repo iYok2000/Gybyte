@@ -97,6 +97,55 @@ const th: Dictionary = {
     "เพิ่มหน้า compliance ที่จำเป็น",
     "ตรวจสอบซ้ำจนพร้อมยื่น AdSense",
   ],
+
+  // Landing page — SEO headings (crawlable H1/H2, keyword-rich)
+  "landing.seo.h1":
+    "AdReady — เครื่องมือตรวจสอบความพร้อม Google AdSense ฟรี เช็กว่าเว็บผ่าน AdSense ไหม",
+  "landing.seo.about.h2":
+    "ตรวจสอบความพร้อม AdSense: ทำเว็บให้พร้อมและสมัคร AdSense ให้ผ่าน",
+  "landing.seo.features.h2":
+    "เครื่องมือตรวจ AdSense ฟรี: ตรวจ ads.txt, HTTPS และ robots.txt",
+
+  // Landing page — Hero
+  "landing.hero.description":
+    "AdReady เครื่องมือตรวจสอบความพร้อม AdSense ฟรี เช็กว่าเว็บผ่าน AdSense ไหม — ตรวจ ads.txt, HTTPS, robots.txt และหน้า Privacy, Contact, About ที่ผู้ตรวจมองหา คลิกเดียวรู้คะแนน 0–100 พร้อมวิธีทำเว็บให้พร้อม AdSense",
+  "landing.hero.cta": "เริ่มตรวจเว็บไซต์",
+
+  // Landing page — About
+  "landing.about.label": "ความพร้อมสำหรับ AdSense",
+  "landing.about.heading": [
+    "เราทำให้เว็บของคุณ ",
+    "พร้อมสมัคร AdSense ให้ผ่าน",
+    " ไม่ต้องเดา รู้คะแนนชัดเจน และสิ่งที่ต้องแก้แบบเจาะจง",
+  ],
+  "landing.about.body":
+    "AdReady ตรวจสอบความพร้อม AdSense ด้วยเกณฑ์เดียวกับที่ผู้ตรวจ AdSense ให้ความสำคัญ — ตรวจ ads.txt, HTTPS, robots.txt และลิงก์หน้า Privacy Policy, Contact และ About บนหน้าแรก — แล้วสรุปเป็นคะแนนความพร้อมพร้อมวิธีแก้ที่นำไปทำเว็บให้พร้อม AdSense ได้ทันที",
+
+  // Landing page — Features
+  "landing.features.header1":
+    "ครบทุกอย่างที่ต้องใช้เพื่อสมัคร AdSense ให้ผ่าน",
+  "landing.features.header2": "ตรวจ ให้คะแนน แก้ไข แล้วยื่น AdSense ได้เลย",
+  "landing.features.card1.caption": "เห็นความพร้อมของเว็บได้ในพริบตา",
+  "landing.features.card2.title": "ตรวจทันที",
+  "landing.features.card2.items": [
+    "ตรวจ ads.txt ที่รากของเว็บ",
+    "ตรวจ HTTPS และใบรับรอง TLS ที่ถูกต้อง",
+    "ยืนยันว่ามี robots.txt ที่ถูกต้อง",
+    "สแกนหน้าแรกหาลิงก์ที่จำเป็น",
+  ],
+  "landing.features.card3.title": "คะแนนความพร้อม",
+  "landing.features.card3.items": [
+    "คะแนนความพร้อม 0–100 ในตัวเดียว",
+    "แยกสีผ่าน/ไม่ผ่านรายข้อ",
+    "จัดลำดับสิ่งที่ควรแก้ก่อน",
+  ],
+  "landing.features.card4.title": "แนวทางแก้ไข",
+  "landing.features.card4.items": [
+    "คำแนะนำแก้ไขทีละขั้นชัดเจน",
+    "เทมเพลต ads.txt และ robots.txt พร้อมใช้",
+    "บริการติดตั้งให้ (ถ้าต้องการ)",
+  ],
+  "landing.features.learnMore": "ดูเพิ่มเติม",
 };
 
 // -- English dictionary ----------------------------------------------------
@@ -169,6 +218,55 @@ const en: Dictionary = {
     "Add the required compliance pages",
     "Re-audit until you're ready to apply",
   ],
+
+  // Landing page — SEO headings (crawlable H1/H2, keyword-rich)
+  "landing.seo.h1":
+    "AdReady — free AdSense readiness checker to check your AdSense eligibility",
+  "landing.seo.about.h2":
+    "AdSense readiness checker: get approved for Google AdSense",
+  "landing.seo.features.h2":
+    "Free ads.txt checker and website AdSense audit tool",
+
+  // Landing page — Hero
+  "landing.hero.description":
+    "AdReady is a free AdSense readiness checker — check your AdSense eligibility across ads.txt, HTTPS, robots.txt, and the Privacy, Contact and About pages reviewers look for. One click, a clear 0–100 score, and exactly what to fix to get approved for Google AdSense.",
+  "landing.hero.cta": "Audit your site",
+
+  // Landing page — About
+  "landing.about.label": "AdSense readiness",
+  "landing.about.heading": [
+    "We get you ",
+    "approved for Google AdSense",
+    ". No guesswork — just a clear score and the exact fixes.",
+  ],
+  "landing.about.body":
+    "AdReady is a website AdSense audit tool that runs the same baseline checks AdSense reviewers care about — ads.txt, HTTPS, robots.txt, and homepage links to Privacy Policy, Contact and About — then returns a single readiness score with fixes you can act on to get approved for Google AdSense.",
+
+  // Landing page — Features
+  "landing.features.header1":
+    "Everything you need to get approved for Google AdSense.",
+  "landing.features.header2": "Check. Score. Fix. Ship.",
+  "landing.features.card1.caption": "See your readiness at a glance.",
+  "landing.features.card2.title": "Instant Audit.",
+  "landing.features.card2.items": [
+    "Checks ads.txt at your site root",
+    "Verifies HTTPS and a valid TLS certificate",
+    "Confirms robots.txt is present and valid",
+    "Scans your homepage for the required links",
+  ],
+  "landing.features.card3.title": "Readiness Score.",
+  "landing.features.card3.items": [
+    "A single 0–100 readiness score",
+    "Color-coded pass/fail per check",
+    "A prioritized list of what to fix first",
+  ],
+  "landing.features.card4.title": "Fix Guidance.",
+  "landing.features.card4.items": [
+    "Clear, step-by-step fix instructions",
+    "Ready-made ads.txt and robots.txt templates",
+    "Optional done-for-you service",
+  ],
+  "landing.features.learnMore": "Learn more",
 };
 
 const dictionaries: Record<Lang, Dictionary> = { th, en };

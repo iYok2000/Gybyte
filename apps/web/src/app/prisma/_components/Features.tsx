@@ -2,8 +2,10 @@
 
 import { motion, useInView } from "framer-motion";
 import { ArrowRight, Check } from "lucide-react";
+import Link from "next/link";
 import { useRef, type ReactNode } from "react";
 import WordsPullUpMultiStyle from "./WordsPullUpMultiStyle";
+import { useLang } from "@/i18n/LanguageProvider";
 
 const CARD_EASE = [0.22, 1, 0.36, 1] as const;
 
@@ -36,51 +38,49 @@ interface InfoCard {
   items: string[];
 }
 
-const INFO_CARDS: InfoCard[] = [
-  {
-    icon: "https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260405_171918_4a5edc79-d78f-4637-ac8b-53c43c220606.png&w=1280&q=85",
-    number: "01",
-    title: "Project Storyboard.",
-    items: [
-      "Drag-and-drop scene sequencing",
-      "Shot lists synced to script",
-      "Frame-accurate timeline",
-      "Collaborative revision history",
-    ],
-  },
-  {
-    icon: "https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260405_171741_ed9845ab-f5b2-4018-8ce7-07cc01823522.png&w=1280&q=85",
-    number: "02",
-    title: "Smart Critiques.",
-    items: [
-      "AI-assisted shot analysis",
-      "Contextual creative notes",
-      "Native tool integrations",
-    ],
-  },
-  {
-    icon: "https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260405_171809_f56666dc-c099-4778-ad82-9ad4f209567b.png&w=1280&q=85",
-    number: "03",
-    title: "Immersion Capsule.",
-    items: [
-      "One-tap notification silencing",
-      "Curated ambient soundscapes",
-      "Focus schedule syncing",
-    ],
-  },
+// Icon sources kept as-is; copy is localized via the i18n dictionary.
+const CARD_ICONS = [
+  "https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260405_171918_4a5edc79-d78f-4637-ac8b-53c43c220606.png&w=1280&q=85",
+  "https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260405_171741_ed9845ab-f5b2-4018-8ce7-07cc01823522.png&w=1280&q=85",
+  "https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260405_171809_f56666dc-c099-4778-ad82-9ad4f209567b.png&w=1280&q=85",
 ];
 
 export default function Features() {
+  const { t, tList } = useLang();
+
+  const INFO_CARDS: InfoCard[] = [
+    {
+      icon: CARD_ICONS[0],
+      number: "01",
+      title: t("landing.features.card2.title"),
+      items: tList("landing.features.card2.items"),
+    },
+    {
+      icon: CARD_ICONS[1],
+      number: "02",
+      title: t("landing.features.card3.title"),
+      items: tList("landing.features.card3.items"),
+    },
+    {
+      icon: CARD_ICONS[2],
+      number: "03",
+      title: t("landing.features.card4.title"),
+      items: tList("landing.features.card4.items"),
+    },
+  ];
+
   return (
     <section className="min-h-screen bg-black relative px-4 md:px-6 py-24">
       <div className="absolute inset-0 bg-noise opacity-[0.15] pointer-events-none" />
 
       <div className="relative z-10 max-w-7xl mx-auto">
+        {/* Crawlable section H2 — the visible header below is animated per-word. */}
+        <h2 className="sr-only">{t("landing.seo.features.h2")}</h2>
         <div className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-normal">
           <WordsPullUpMultiStyle
             segments={[
               {
-                text: "Studio-grade workflows for visionary creators.",
+                text: t("landing.features.header1"),
                 className: "",
               },
             ]}
@@ -90,7 +90,7 @@ export default function Features() {
           <WordsPullUpMultiStyle
             segments={[
               {
-                text: "Built for pure vision. Powered by art.",
+                text: t("landing.features.header2"),
                 className: "text-gray-500",
               },
             ]}
@@ -115,7 +115,7 @@ export default function Features() {
               className="absolute bottom-4 left-4 text-lg font-medium"
               style={{ color: "#E1E0CC" }}
             >
-              Your creative canvas.
+              {t("landing.features.card1.caption")}
             </span>
           </div>
         </AnimatedCard>
@@ -149,13 +149,13 @@ export default function Features() {
                   </li>
                 ))}
               </ul>
-              <a
-                href="#"
+              <Link
+                href="/services/fix-adsense"
                 className="mt-auto inline-flex items-center gap-1 text-primary text-sm"
               >
-                Learn more
+                {t("landing.features.learnMore")}
                 <ArrowRight className="w-4 h-4 -rotate-45" />
-              </a>
+              </Link>
             </div>
           </AnimatedCard>
         ))}
