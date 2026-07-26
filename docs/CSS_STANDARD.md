@@ -3,6 +3,21 @@
 Tailwind CSS **v4** + CSS custom-property design tokens. ไฟล์เดียว: `apps/web/src/app/globals.css`
 (`@import "tailwindcss";` + tokens ใน `:root`/`.dark`). Dark mode = next-themes (`attribute="class"`)
 
+## Fonts (รองรับ Thai+Latin)
+โหลดผ่าน `next/font/google` ใน `src/app/layout.tsx`, เปิดเป็น CSS variable บน `<html>`:
+| ฟอนต์ | บทบาท | variable | ใช้ผ่าน |
+|---|---|---|---|
+| **Anuphan** (300–700) | primary ทั้งเว็บ (landing + audit) | `--font-sans` | ตั้ง `fontFamily: var(--font-sans)` ที่ wrapper / `@theme` |
+| **Noto Serif Thai** (400/600) | accent (หัวข้อ About) | `--font-serif-thai` | utility `font-serif` (globals map `--font-serif` → Thai serif ก่อน) |
+| Instrument Serif (italic) | Latin fallback ของ serif | `--font-instrument-serif` | ต่อท้าย stack เท่านั้น |
+
+> **ห้ามใช้ Almarai** (ไม่มี glyph ไทย). การ reveal ต่ออักขระ (About) ต้องตัดแบบ **grapheme** (`Intl.Segmenter`) กันสระ/วรรณยุกต์ไทยแตก และ accent ไทย **ไม่ใช้ `italic`** (Noto Serif Thai ไม่มี italic จริง)
+
+## ⚠️ "primary" มีสองความหมาย (อย่าสับสน)
+- **`--primary: #10B981`** (เขียว) = CSS var ธีม AdReady เดิม → ใช้ผ่าน arbitrary syntax `text-(--primary)`, `bg-(--primary)`
+- **Tailwind `--color-primary: #DEDBC8`** (ครีม) ใน `@theme` → ใช้ผ่าน utility `text-primary`, `bg-primary`, `text-primary/70` (โทน landing/ครีม)
+สองอันนี้คนละตัวและใช้ syntax ต่างกัน
+
 ## Design tokens
 | Token | Light | Dark | ใช้กับ |
 |---|---|---|---|
@@ -22,6 +37,23 @@ Tailwind CSS **v4** + CSS custom-property design tokens. ไฟล์เดี�
 | `--violet` / `--amber` | `#8B5CF6` / `#FBBF24` | `#A78BFA` / `#FBBF24` | accent |
 
 `@theme inline` map `--color-background`/`--color-foreground` → ใช้ `bg-background` / `text-foreground` ได้
+และเพิ่ม `--color-primary: #DEDBC8` (utility `text-primary`) + `--font-serif`
+
+## Landing + AdReady dark palette (cinematic ดำ-ครีม)
+หน้า `/`, `/audit`, `/services/fix-adsense` ใช้โทนเดียวกัน (ตั้ง bg ดำ + ครีม + Anuphan ที่ wrapper ของแต่ละ group layout):
+| ใช้ | ค่า |
+|---|---|
+| พื้นหลัง | `#000000` / `#0a0a0a` |
+| การ์ด | `#101010`, `#212121` |
+| ข้อความหลัก | `#E1E0CC` (inline) |
+| ข้อความครีมรอง / accent | `text-primary` = `#DEDBC8` |
+| ข้อความ muted | `text-gray-400` / `text-gray-500` |
+| เส้นขอบ | `border-white/10`, `border-white/20` |
+| nav link | `rgba(225,224,204,0.8)` → hover `#E1E0CC` |
+
+### Noise textures (SVG feTurbulence ใน globals.css)
+- `.noise-overlay` (baseFrequency 0.85) — เกรนทับวิดีโอ hero (`opacity-[0.7] mix-blend-overlay`)
+- `.bg-noise` (baseFrequency 0.9) — พื้นหลัง Features (`opacity-[0.15]`)
 
 ## กติกา
 - **ใช้ token เสมอ** ผ่าน syntax Tailwind v4: `bg-(--card)`, `text-(--foreground)`, `border-(--border)`, `text-(--error)` — **ห้าม** hardcode สี hex ใน component
@@ -43,7 +75,8 @@ Tailwind CSS **v4** + CSS custom-property design tokens. ไฟล์เดี�
 - **Button**: primary / secondary / large / small / pill / link / ghost (+ `loading`, `fullWidth`, `icon`)
 - **Badge**: default / primary / success / warning / error / outline / violet / glow — ใช้ success/error แยกสถานะ pass/fail
 
-## a11y
+## a11y & SEO headings
 - ผลลัพธ์อยู่ใน `aria-live="polite"`
 - ScoreDisplay: valid ปกติ, indeterminate = `role="status"`, invalid = `role="alert"`
 - แยก pass/fail ด้วยสี **และ** ข้อความ/ไอคอน (ไม่พึ่งสีอย่างเดียว)
+- หัวข้อ landing ที่เป็นแอนิเมชันเป็น decorative → มี `<h1/h2 className="sr-only">` keyword-rich คู่กันเพื่อ SEO/screen reader (`sr-only` ของ Tailwind v4 มีให้ใช้ในตัว)

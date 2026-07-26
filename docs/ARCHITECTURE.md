@@ -1,5 +1,16 @@
 # Architecture
 
+## Routes (App Router)
+| Route | ชนิด | เนื้อหา |
+|---|---|---|
+| `/` | static | Landing page (Hero + About + Features) — `app/page.tsx` |
+| `/audit` | static | เครื่องมือตรวจสอบ (dashboard) — group `app/(audit)/` |
+| `/services/fix-adsense` | static | หน้าบริการ — group `app/services/` |
+| `/api/audit` | dynamic | Proxy BFF → Go backend — `app/api/audit/route.ts` |
+| `/robots.txt`, `/sitemap.xml`, `/opengraph-image`, `/icon`, `/apple-icon` | static | SEO/branding (generated) |
+
+**Layout composition**: root `app/layout.tsx` = shell ขั้นต่ำ (html/body + ThemeProvider + **LanguageProvider** + โหลดฟอนต์) — ไม่มี Header. Header/nav (SiteNav pill) อยู่ใน group layout ของ `/audit` และ `/services/*` เพื่อให้ landing (`/`) เต็มจอไม่มี chrome ทับ
+
 ## Data flow (end-to-end)
 ```
 Browser (/audit)
@@ -59,8 +70,27 @@ infrastructure/adapter/http
 | proxy ต่อ backend ไม่ได้/timeout | 502 | `UPSTREAM_UNAVAILABLE` / `UPSTREAM_TIMEOUT` |
 
 ## Frontend structure
-- feature-scoped: `app/(audit)/audit/{_components,_hooks,_utils}`
+- feature-scoped: `app/(audit)/audit/{_components,_hooks,_utils}`; landing: `app/prisma/_components/`
 - `useAudit`: state loading/result/error + `lastUrlRef`; `retry()` ยิงซ้ำ URL เดิม
-- `useCountdown`: นับถอยหลัง retryAfter สด (429) ปิดปุ่ม retry จน 0
+- `useCountdown`: นับถอยหลัง retryAfter สด (429) ปิดปุ่ม retry จน 0 (ใช้ `useSyncExternalStore` แนว เลี่ยง setState-in-effect)
 - `ScoreDisplay`: loading→spinner; `null`→"ประเมินไม่ได้"; นอกช่วง/ไม่ใช่ int→"คะแนนไม่ถูกต้อง"; valid→เลขใหญ่ + score band color
-- ทุก error message เป็นภาษาไทย ไม่ leak รายละเอียดภายใน
+- ผลลัพธ์แสดงเป็น **grid** (`sm:grid-cols-2 lg:grid-cols-3`) คงลำดับ, สรุปคะแนน+`ผ่าน X/Y` ด้านบน
+- ทุก error message ที่ผู้ใช้เห็นไม่ leak รายละเอียดภายใน
+
+## i18n (TH/EN)
+- `src/i18n/LanguageProvider.tsx`: context `lang` (`th`|`en`, default `th`), เก็บ localStorage ผ่าน `useSyncExternalStore` (server snapshot = `th` กัน hydration mismatch)
+- `useLang()` → `{ lang, setLang, t, tList }`; dictionary รวม audit/fix/landing/nav/seo keys ทั้ง `th` + `en`
+- ปุ่มสลับ TH/EN อยู่ใน `SiteNav`; นอก provider → fallback `th` (unit tests)
+- Landing components (Hero/About/Features) ดึงข้อความจาก `t()/tList()`; About reveal ตัดด้วย grapheme (`Intl.Segmenter`) รองรับไทย
+
+## SEO
+- **Metadata** ต่อ route (Next Metadata API): root `layout.tsx` (default + `template "%s | AdReady"` + keywords + OpenGraph + Twitter + `metadataBase` + `robots index/follow`), landing `page.tsx`, `(audit)/layout.tsx`, `services/fix-adsense/layout.tsx` (สร้างเพราะ page เป็น client)
+- **Headings**: 1 `<h1 className="sr-only">` (keyword-rich) บน landing + `<h2 sr-only>` ที่ About/Features (heading ที่เห็นเป็นแอนิเมชัน decorative)
+- **`app/robots.ts`** → allow all + sitemap + host; **`app/sitemap.ts`** → /, /audit, /services/fix-adsense
+- **`app/opengraph-image.tsx`** → OG/Twitter image 1200×630 (next/og, ข้อความ EN กัน tofu ไทย)
+- **JSON-LD** (`WebSite` + `SoftwareApplication`, `price 0`) ฝังใน `app/page.tsx`
+- base URL ทุกจุดใช้ `NEXT_PUBLIC_SITE_URL` (fallback localhost)
+
+## Branding / icons
+- โลโก้: `public/logo.png` — แสดงใน SiteNav เป็นวงกลม (`rounded-full object-cover`)
+- favicon: `app/icon.tsx` (64×64) + `app/apple-icon.tsx` (180×180) — อ่าน `public/logo.png` มา crop วงกลมด้วย `next/og` (เปลี่ยนโลโก้แค่ทับไฟล์เดียว)
