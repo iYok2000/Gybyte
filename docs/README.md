@@ -7,6 +7,12 @@
 เว็บประกอบด้วย **หน้า Landing การตลาด** (`/`, ธีม cinematic ดำ-ครีม) + **เครื่องมือตรวจสอบ** (`/audit`)
 + **หน้าบริการ** (`/services/fix-adsense`) รองรับ **สองภาษา (TH/EN)** สลับได้จากปุ่มบน nav
 
+## ทำไมต้องมี backend (`apps/backend-go`)
+BE คือ **Audit Engine** — ตรรกะตรวจสอบจริงทั้งหมดอยู่ที่นี่ ไม่ใช่ของประดับ: ดึง/ตรวจ `ads.txt`, HTTPS/TLS,
+`robots.txt`, ลิงก์ compliance บนเว็บเป้าหมาย, ป้องกัน SSRF/path-traversal/DNS-rebinding (เพราะรับ URL ภายนอกมายิงออก),
+คำนวณ `auditScore` และทำ rate limiting. FE เรียกผ่าน proxy `/api/audit` — **ถ้าไม่มี BE หน้า `/audit` ทำงานไม่ได้**
+ส่วน Landing/SEO/branding เป็นการตลาดที่พาผู้ใช้มาใช้เครื่องมือนี้
+
 ## เอกสารในโฟลเดอร์นี้
 | ไฟล์ | เนื้อหา |
 |---|---|

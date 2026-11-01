@@ -33,12 +33,14 @@ func TestComplianceLinkMatching_Property8(t *testing.T) {
 		"Privacy Policy", "privacy", "นโยบายความเป็นส่วนตัว", "ความเป็นส่วนตัว",
 		"Contact", "Contact Us", "ติดต่อ", "ติดต่อเรา",
 		"About", "About Us", "เกี่ยวกับ", "เกี่ยวกับเรา",
+		"Terms of Service", "Terms and Conditions", "ข้อกำหนดและเงื่อนไข", "เงื่อนไขการใช้งาน",
 		"Home", "Products", "ข่าวสาร", "",
 	}
 	hrefs := []string{
 		"/privacy", "https://example.com/contact", "mailto:hi@example.com", "/about-us",
 		"#", "#privacy", "javascript:void(0)", "data:text/html,privacy",
 		"tel:123456", "", "privacy-policy.html", "javascript:contact()",
+		"/terms", "/terms-of-service", "https://example.com/terms-and-conditions",
 	}
 
 	buildHTML := func(links []linkSpec) string {
@@ -65,8 +67,8 @@ func TestComplianceLinkMatching_Property8(t *testing.T) {
 		body := buildHTML(links)
 		original := statusesFor(body)
 
-		// Exactly three category results, in the fixed order.
-		if len(original) != 3 {
+		// Exactly four category results, in the fixed order.
+		if len(original) != 4 {
 			return false
 		}
 		if _, ok := original["Privacy Policy"]; !ok {
@@ -76,6 +78,9 @@ func TestComplianceLinkMatching_Property8(t *testing.T) {
 			return false
 		}
 		if _, ok := original["About Us"]; !ok {
+			return false
+		}
+		if _, ok := original["Terms of Service"]; !ok {
 			return false
 		}
 

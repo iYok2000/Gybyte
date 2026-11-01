@@ -14,21 +14,26 @@ import (
 
 // Feature: adready-checker, Property 7
 //
-// Property 7: the robots.txt result is mapped from HTTP status 200 plus syntax
-// validity. Pass iff status is 200 AND every non-empty, non-comment line is a
-// "<known directive>: value" pair; an empty body with 200 passes. Non-200 or a
-// malformed line yields fail. The generator covers valid/invalid syntax,
-// non-ASCII values, odd whitespace, and CRLF line endings.
+// Property 7: the robots.txt result is mapped from HTTP status 200, syntax
+// validity, and whether the catch-all group blocks the whole site. Pass iff
+// status is 200 AND every non-empty, non-comment line is a
+// "<known directive>: value" pair AND the "User-agent: *" group does NOT block
+// the entire site (a "Disallow: /" not overridden by an "Allow: /"). An empty
+// body with 200 passes. Non-200, a malformed line, or a site-wide block yields
+// fail. The generator covers valid/invalid syntax, non-ASCII values, odd
+// whitespace, CRLF line endings, and blocking / non-blocking catch-all groups.
 //
 // Validates: Requirements 5.2, 5.3, 5.4, 5.5
 func TestRobotsTxtResultMapping_Property7(t *testing.T) {
 	// robotsScenario carries a generated body plus the independently-computed
-	// expectation of whether its syntax is valid.
+	// expectations of whether its syntax is valid and whether it blocks the
+	// whole site.
 	type robotsScenario struct {
 		unreachable       bool
 		status            int
 		body              string
 		expectValidSyntax bool
+		expectSiteBlocked bool
 	}
 
 	// validLines are always acceptable (blank, comment, or known directive with
@@ -75,11 +80,40 @@ func TestRobotsTxtResultMapping_Property7(t *testing.T) {
 			return false
 		}
 
-		wantPass := !sc.unreachable && sc.status == 200 && sc.expectValidSyntax
+		wantPass := !sc.unreachable && sc.status == 200 && sc.expectValidSyntax && !sc.expectSiteBlocked
 		if wantPass {
 			return got.Status == valueobject.StatusPass
 		}
 		return got.Status == valueobject.StatusFail && got.Message != ""
+	}
+
+	// blockGroups are appended (as valid syntax) to exercise site-wide block
+	// detection. Each entry pairs a set of lines for a catch-all group with the
+	// independently-known expectation of whether it blocks the whole site.
+	type blockGroup struct {
+		lines   []string
+		blocked bool
+	}
+	blockGroups := []blockGroup{
+		// No explicit group at all.
+		{lines: nil, blocked: false},
+		// Catch-all fully blocked.
+		{lines: []string{"User-agent: *", "Disallow: /"}, blocked: true},
+		// Catch-all blocked then re-allowed in the same group — not blocked.
+		{lines: []string{"User-agent: *", "Disallow: /", "Allow: /"}, blocked: false},
+		// Catch-all disallowing only a sub-path — not blocked.
+		{lines: []string{"User-agent: *", "Disallow: /private"}, blocked: false},
+		// Catch-all with an empty disallow (allow everything) — not blocked.
+		{lines: []string{"User-agent: *", "Disallow:"}, blocked: false},
+		// A specific bot is fully blocked but the catch-all is not affected.
+		{lines: []string{"User-agent: Googlebot", "Disallow: /"}, blocked: false},
+		// Odd whitespace around the blocking rule is still a block.
+		{lines: []string{"User-agent:   *", "  Disallow:   /  "}, blocked: true},
+		// Inline comments after the UA token and the blocking rule are stripped,
+		// so this still counts as a full-site block.
+		{lines: []string{"User-agent: *  # all bots", "Disallow: /   # block everything"}, blocked: true},
+		// An inline comment must not turn a sub-path disallow into a root block.
+		{lines: []string{"User-agent: *", "Disallow: /private   # secret area"}, blocked: false},
 	}
 
 	gen := func(values []reflect.Value, rnd *rand.Rand) {
@@ -89,10 +123,19 @@ func TestRobotsTxtResultMapping_Property7(t *testing.T) {
 			sep = "\r\n" // exercise CRLF normalization
 		}
 
+		// The block group is emitted FIRST. Because every block group ends with
+		// a rule line (not a User-agent line), the random lines that follow
+		// start fresh groups and cannot merge into the catch-all group, so
+		// bg.blocked remains an accurate, independent expectation. None of the
+		// random line pool entries introduce a "Disallow: /" or "Allow: /", so
+		// they never alter site-wide block detection.
+		bg := blockGroups[rnd.Intn(len(blockGroups))]
+
 		numLines := rnd.Intn(6)
-		lines := make([]string, 0, numLines)
+		lines := make([]string, 0, numLines+len(bg.lines))
+		lines = append(lines, bg.lines...)
 		valid := true
-		for i := 0; i < numLines; i++ {
+		for range numLines {
 			if rnd.Intn(3) == 0 {
 				lines = append(lines, invalidLines[rnd.Intn(len(invalidLines))])
 				valid = false
@@ -106,6 +149,7 @@ func TestRobotsTxtResultMapping_Property7(t *testing.T) {
 			status:            statuses[rnd.Intn(len(statuses))],
 			body:              strings.Join(lines, sep),
 			expectValidSyntax: valid,
+			expectSiteBlocked: bg.blocked,
 		}
 		values[0] = reflect.ValueOf(sc)
 	}

@@ -15,10 +15,11 @@ import (
 // complianceTimeout bounds the homepage GET (Req 6.1).
 const complianceTimeout = 10 * time.Second
 
-// complianceGroupTitle names the check group; it returns three results.
+// complianceGroupTitle names the check group; it returns one result per
+// category.
 const complianceGroupTitle = "Compliance Links"
 
-// homepageUnreachableMessage is used for all three results when the homepage
+// homepageUnreachableMessage is used for all category results when the homepage
 // cannot be fetched (Req 6.8).
 const homepageUnreachableMessage = "ไม่สามารถเข้าถึงหน้าแรกของเว็บไซต์เพื่อตรวจสอบลิงก์ได้"
 
@@ -30,11 +31,12 @@ type complianceCategory struct {
 }
 
 // complianceCategories is a SLICE (not a map) so the result order is stable:
-// Privacy Policy → Contact → About Us (Req 6.9).
+// Privacy Policy → Contact → About Us → Terms of Service (Req 6.9).
 var complianceCategories = []complianceCategory{
 	{title: "Privacy Policy", synonyms: []string{"privacy policy", "privacy", "นโยบายความเป็นส่วนตัว", "ความเป็นส่วนตัว"}},
 	{title: "Contact", synonyms: []string{"contact", "contact us", "ติดต่อ", "ติดต่อเรา"}},
 	{title: "About Us", synonyms: []string{"about", "about us", "เกี่ยวกับ", "เกี่ยวกับเรา"}},
+	{title: "Terms of Service", synonyms: []string{"terms of service", "terms and conditions", "terms & conditions", "terms", "ข้อกำหนดและเงื่อนไข", "ข้อกำหนดการใช้งาน", "ข้อกำหนด", "เงื่อนไขการใช้งาน", "เงื่อนไขการใช้", "ข้อตกลงการใช้งาน", "ข้อตกลงการใช้"}},
 }
 
 // anchor is a normalized <a> element: its visible text and href are both
@@ -56,7 +58,7 @@ func (ComplianceLinksCheck) Title() string { return complianceGroupTitle }
 
 // Evaluate fetches the homepage, extracts anchors, and returns one result per
 // category. It never returns an error (Req 14.2). If the homepage is
-// unreachable (transport error, nil response, or status != 200) all three
+// unreachable (transport error, nil response, or status != 200) all category
 // results fail with homepageUnreachableMessage and no matching is performed
 // (Req 6.8).
 func (c ComplianceLinksCheck) Evaluate(ctx context.Context, target Target, f port.Fetcher) []valueobject.Result {

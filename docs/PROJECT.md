@@ -14,7 +14,7 @@
 1. **Landing page** (`/`) — การตลาด AdReady, วิดีโอพื้นหลัง, framer-motion, สองภาษา
 2. กรอก/validate URL (FE UX + BE re-validate เสมอ)
 3. SSRF + path-traversal + DNS-rebinding guard (BE)
-4. ตรวจ 4 กลุ่ม: ads.txt · HTTPS/TLS · robots.txt · compliance links (ไทย/อังกฤษ)
+4. ตรวจ 4 กลุ่ม: ads.txt · HTTPS/TLS · robots.txt (presence + syntax + **indexability**: fail เมื่อ `User-agent: *` มี `Disallow: /` ที่ไม่ถูก `Allow: /` override) · compliance links 4 หมวด (Privacy Policy · Contact · About Us · **Terms of Service**) ไทย/อังกฤษ
 5. คำนวณ `auditScore` (round-half-up, ถ่วงน้ำหนักเท่ากัน; empty → `null`)
 6. Rate limiting 60/60s ต่อ IP + `Retry-After` (429) + trusted proxy
 7. แสดงคะแนน (score bands) + รายการผล (grid) + ปุ่ม "แก้ปัญหานี้"
